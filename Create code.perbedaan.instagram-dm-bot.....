@@ -1,0 +1,65 @@
+import time
+import os
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+
+USERNAME = os.getenv('IG_USERNAME', 'your_username')
+PASSWORD = os.getenv('IG_PASSWORD', 'your_password')
+MESSAGE = os.getenv('IG_MESSAGE', 'Halo, ini pesan dari bot!')
+
+def login(driver):
+    driver.get('https://www.instagram.com/accounts/login/')
+    time.sleep(3)
+    driver.find_element(By.NAME, 'username').send_keys(USERNAME)
+    driver.find_element(By.NAME, 'password').send_keys(PASSWORD)
+    driver.find_element(By.NAME, 'password').send_keys(Keys.RETURN)
+    time.sleep(5)
+
+def get_followers(driver):
+    driver.get(f'https://www.instagram.com/{USERNAME}/')
+    time.sleep(3)
+    followers_link = driver.find_element(By.PARTIAL_LINK_TEXT, 'followers')
+    followers_link.click()
+    time.sleep(3)
+    followers_popup = driver.find_element(By.XPATH, "//div[@role='dialog']//ul")
+    followers = set()
+    last_height = 0
+    while True:
+        driver.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight", followers_popup)
+        time.sleep(2)
+        links = followers_popup.find_elements(By.TAG_NAME, 'a')
+        for link in links:
+            user = link.get_attribute('href')
+            if user and '/accounts/' not in user:
+                followers.add(user)
+        new_height = driver.execute_script("return arguments[0].scrollTop", followers_popup)
+        if new_height == last_height or len(followers) > 50:  # Batasi untuk demo
+            break
+        last_height = new_height
+    return list(followers)
+
+def send_dm(driver, user_url):
+    driver.get(user_url)
+    time.sleep(3)
+    try:
+        message_btn = driver.find_element(By.XPATH, "//button[contains(text(),'Message')]")
+        message_btn.click()
+        time.sleep(2)
+        textarea = driver.find_element(By.TAG_NAME, 'textarea')
+        textarea.send_keys(MESSAGE)
+        textarea.send_keys(Keys.RETURN)
+        time.sleep(1)
+    except Exception as e:
+        print(f"Gagal kirim ke {user_url}: {e}")
+
+def main():
+    driver = webdriver.Chrome()
+    login(driver)
+    followers = get_followers(driver)
+    for user_url in followers:
+        send_dm(driver, user_url)
+    driver.quit()
+
+if __name__ == "__main__":
+    main()
