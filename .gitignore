@@ -1,34 +1,47 @@
-# Gradle files
-.gradle/
-build/
+# Object file
+*.o
 
-# Local configuration file (sdk path, etc)
-local.properties
+# Ada Library Information
+*.ali
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+import time
 
-# Log/OS Files
-*.log
+# Ganti dengan username dan password kamu
+USERNAME = 'your_username'
+PASSWORD = 'your_password'
+# Nama grup DM atau nama pengguna
+GROUP_NAME = 'Nama Grup'
 
-# Android Studio generated files and folders
-captures/
-.externalNativeBuild/
-.cxx/
-*.aab
-*.apk
-output-metadata.json
+# Pesan yang ingin dikirim
+MESSAGE = 'Halo, ini pesan dari bot!'
 
-# IntelliJ
-*.iml
-.idea/
-misc.xml
-deploymentTargetDropDown.xml
-render.experimental.xml
+driver = webdriver.Chrome()  # Pastikan chromedriver di PATH
+driver.get('https://www.instagram.com/accounts/login/')
 
-# Keystore files
-*.jks
-*.keystore
+time.sleep(3)
+# Login
+driver.find_element('name', 'username').send_keys(USERNAME)
+driver.find_element('name', 'password').send_keys(PASSWORD)
+driver.find_element('name', 'password').send_keys(Keys.RETURN)
+time.sleep(5)
 
-# Google Services (e.g. APIs or Firebase)
-google-services.json
+# Navigasi ke DM
+driver.get('https://www.instagram.com/direct/inbox/')
+time.sleep(5)
 
-# Android Profiling
-*.hprof
+# Cari grup atau user
+search_box = driver.find_element('xpath', '//input[@placeholder="Search"]')
+search_box.send_keys(GROUP_NAME)
+time.sleep(2)
+search_box.send_keys(Keys.RETURN)
+time.sleep(2)
+
+# Kirim pesan
+text_box = driver.find_element('xpath', '//textarea[@placeholder="Message..."]')
+text_box.send_keys(MESSAGE)
+text_box.send_keys(Keys.RETURN)
+time.sleep(2)
+
+# Tutup browser
+driver.quit()
