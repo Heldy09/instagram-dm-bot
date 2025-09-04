@@ -41,6 +41,25 @@ Bot sederhana untuk mengirim pesan ke grup Instagram Messenger menggunakan Selen
 - Gunakan hanya untuk pembelajaran/personal. Jangan spam!
 - Instagram dapat memblokir akun jika terdeteksi aktivitas mencurigakan.
 
+Catatan Penting
+Bot ini hanya untuk pembelajaran dan penggunaan pribadi.
+Instagram bisa memblokir akun jika mendeteksi aktivitas otomatis yang mencurigakan.
+Jangan gunakan untuk spam atau melanggar aturan Instagram.
+
+
+5. Pengembangan Lebih Lanjut
+Otomatiskan pengiriman pesan ke beberapa grup.
+Integrasikan dengan database atau UI sederhana.
+
+
+Rencana Isi Repositori
+Kode Bot: Script Python menggunakan Selenium untuk mengirim pesan ke grup Instagram.
+README: Penjelasan cara pakai, install, dan konfigurasi.
+persyaratan.txt: Daftar perpustakaan yang dibutuhkan.
+.gitignore: Untuk mengabaikan file yang tidak perlu (misalnya, pycache , driver, dll).
+
+
+
 ## Kontribusi
 Pull request & issue dipersilakan!
 
