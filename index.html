@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>To-Do List App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .container {
+      background: #fff;
+      padding: 2em;
+      margin-top: 3em;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      width: 350px;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    .input-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 1em;
+    }
+    input[type="text"] {
+      flex: 1;
+      padding: 0.5em;
+      font-size: 1em;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    button {
+      padding: 0.5em 1em;
+      font-size: 1em;
+      border-radius: 4px;
+      border: none;
+      background: #007bff;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    ul {
+      list-style: none;
+      padding-left: 0;
+    }
+    li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.5em 0;
+      border-bottom: 1px solid #eee;
+    }
+    .completed {
+      text-decoration: line-through;
+      color: #888;
+    }
+    .delete-btn {
+      background: #dc3545;
+      color: white;
+      border: none;
+      border-radius: 3px;
+      padding: 4px 8px;
+      cursor: pointer;
+      font-size: 0.9em;
+      margin-left: 10px;
+    }
+    .delete-btn:hover {
+      background: #b52a37;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>To-Do List</h1>
+    <div class="input-row">
+      <input type="text" id="todo-input" placeholder="Add new task">
+      <button onclick="addTodo()">Add</button>
+    </div>
+    <ul id="todo-list"></ul>
+  </div>
+  <script>
+    let todos = [];
+
+    // Load todos from localStorage
+    function loadTodos() {
+      const stored = localStorage.getItem('todos');
+      todos = stored ? JSON.parse(stored) : [];
+    }
+
+    // Save todos to localStorage
+    function saveTodos() {
+      localStorage.setItem('todos', JSON.stringify(todos));
+    }
+
+    function addTodo() {
+      const input = document.getElementById('todo-input');
+      const text = input.value.trim();
+      if (text !== '') {
+        todos.push({ text, completed: false });
+        input.value = '';
+        saveTodos();
+        renderTodos();
+      }
+    }
+
+    function toggleTodo(index) {
+      todos[index].completed = !todos[index].completed;
+      saveTodos();
+      renderTodos();
+    }
+
+    function deleteTodo(index) {
+      todos.splice(index, 1);
+      saveTodos();
+      renderTodos();
+    }
+
+    function renderTodos() {
+      const list = document.getElementById('todo-list');
+      list.innerHTML = '';
+      todos.forEach((todo, idx) => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <span class="${todo.completed ? 'completed' : ''}" onclick="toggleTodo(${idx})">${todo.text}</span>
+          <button class="delete-btn" onclick="deleteTodo(${idx})">Delete</button>
+        `;
+        list.appendChild(li);
+      });
+    }
+
+    // Init
+    loadTodos();
+    renderTodos();
+  </script>
+</body>
+</html>
